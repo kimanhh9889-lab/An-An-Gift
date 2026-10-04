@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hóa Đơn Bán Hàng - An An Gift</title>
+  <!-- Nhúng phông chữ Montserrat giống hệt mẫu -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #800000;
+      --primary-red-hover: #600000;
+      --blue-btn: #4D4DFF;
+      --cyan-btn: #0099B8;
+      --dark-btn: #4B5563;
+      --gold-btn: #D97706;
+      --green-status: #16A34A;
+      --bg-light: #F3F4F6;
+      --border-color: #D1D5DB;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      padding: 20px 10px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    /* Action Toolbar Top */
+    .toolbar-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-purple { background-color: var(--blue-btn); }
+    .btn-cyan { background-color: var(--cyan-btn); }
+    .btn-gray { background-color: var(--dark-btn); }
+    .btn-gold { background-color: var(--gold-btn); }
+    .btn-darkred { background-color: var(--primary-red); width: 100%; font-size: 15px; padding: 12px; }
+
+    .status-bar {
+      text-align: right;
+      color: var(--green-status);
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    /* Invoice Paper Container */
+    .invoice-paper {
+      background: white;
+      padding: 40px;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 0 auto;
+    }
+
+    /* Header Invoice */
+    .invoice-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .brand-title {
+      color: var(--primary-red);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand-sub {
+      color: var(--gold-btn);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-top: 4px;
+    }
+
+    .doc-title {
+      color: var(--primary-red);
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 15px;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: var(--primary-red);
+      margin: 15px 0 20px 0;
+    }
+
+    /* Info Section */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 20px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .info-label {
+      font-weight: 700;
+      width: 90px;
+      flex-shrink: 0;
+    }
+
+    .info-input {
+      border: none;
+      border-bottom: 1px dotted #888;
+      width: 100%;
+      padding: 2px 5px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    /* Table Invoice */
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+    }
+
+    .invoice-table th {
+      background-color: var(--primary-red);
+      color: white;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--primary-red);
+      text-align: center;
+    }
+
+    .invoice-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      text-align: center;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .invoice-table input[type="text"],
+    .invoice-table input[type="number"] {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .img-upload-box {
+      width: 80px;
+      height: 80px;
+      border: 1px dashed #ccc;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #999;
+      cursor: pointer;
+      position: relative;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .btn-remove-row {
+      background-color: #EF4444;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Summary Table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: -1px;
+    }
+
+    .summary-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .summary-table .label {
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .summary-table .val {
+      font-weight: 700;
+      text-align: center;
+      width: 180px;
+    }
+
+    /* Signature Section */
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .sig-box {
+      width: 45%;
+    }
+
+    .sig-title {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .sig-sub {
+      font-style: italic;
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-style: italic;
+      font-size: 11px;
+      color: #777;
+      margin-top: 60px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+
+    /* Modal Stock Management */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: white;
+      width: 900px;
+      max-width: 95vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: var(--primary-red);
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      padding: 20px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .stock-card {
+      border: 1px solid #E5E7EB;
+      border-radius: 6px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .stock-card img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    .stock-title {
+      font-weight: 700;
+      color: var(--primary-red);
+      margin-bottom: 2px;
+    }
+
+    .stock-price {
+      font-weight: 600;
+      color: #4B5563;
+      margin-bottom: 8px;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+    }
+
+    .btn-sm {
+      padding: 4px;
+      font-size: 11px;
+      border: none;
+      color: white;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn-edit { background-color: #2563EB; }
+    .btn-delete { background-color: #EF4444; }
+
+    /* Print styling */
+    @media print {
+      body { background: white; padding: 0; }
+      .toolbar-card, .status-bar, .btn-remove-row, .modal-overlay { display: none !important; }
+      .invoice-paper { box-shadow: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Thanh công cụ điều khiển -->
+  <div class="toolbar-card">
+    <div class="btn-grid">
+      <button class="btn btn-purple" onclick="openModal()">📦 Kho Mã Hàng</button>
+      <button class="btn btn-cyan" onclick="saveDraft()">💾 Lưu Nháp</button>
+      <button class="btn btn-gray" onclick="alert('Đã mở danh sách đơn nháp!')">📁 Đơn Nháp ( 4 )</button>
+      <button class="btn btn-cyan" onclick="window.print()">🖨️ In Hóa Đơn</button>
+      <button class="btn btn-cyan" onclick="window.print()">📄 Xuất PDF</button>
+      <button class="btn btn-gold" onclick="alert('Đã chụp ảnh hóa đơn!')">📷 Chụp Ảnh</button>
+    </div>
+    <button class="btn btn-darkred" onclick="addRow()">↵ Xuống Dòng (Thêm Dòng)</button>
+  </div>
+
+  <div class="status-bar">
+    ✅ Đã đồng bộ đám mây (<span id="cloud-count">13</span> mã hàng sẵn sàng)
+  </div>
+
+  <!-- Tờ Hóa Đơn In -->
+  <div class="invoice-paper" id="invoice">
+    <div class="invoice-header">
+      <div class="brand-title">AN AN GIFT</div>
+      <div class="brand-sub">QUÀ TẶNG DOANH NGHIỆP & GIỎ QUÀ TẾT</div>
+      <div class="doc-title">HÓA ĐƠN BÁN HÀNG</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-grid">
+      <div class="info-row">
+        <span class="info-label">Khách hàng:</span>
+        <input type="text" class="info-input" placeholder="Nhập tên khách hàng / đơn vị...">
+      </div>
+      <div class="info-row">
+        <span class="info-label">Ngày lập:</span>
+        <input type="text" class="info-input" id="current-date">
+      </div>
+      <div class="info-row">
+        <span class="info-label">Điện thoại:</span>
+        <input type="text" class="info-input" placeholder="Nhập số điện thoại...">
+      </div>
+      <div class="info-row">
+        <span class="info-label">Mã hóa đơn:</span>
+        <input type="text" class="info-input" id="invoice-id" value="AA602951">
+      </div>
+      <div class="info-row" style="grid-column: span 2;">
+        <span class="info-label">Địa chỉ:</span>
+        <input type="text" class="info-input" placeholder="Nhập địa chỉ giao hàng...">
+      </div>
+    </div>
+
+    <!-- Bảng sản phẩm -->
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th style="width: 50px;">STT</th>
+          <th style="width: 120px;">Mã Hàng</th>
+          <th style="width: 60px;">SL</th>
+          <th style="width: 110px;">Đơn Giá</th>
+          <th style="width: 110px;">Thành Tiền</th>
+          <th style="width: 110px;">Hình Ảnh</th>
+          <th>Ghi Chú</th>
+          <th style="width: 30px;"></th>
+        </tr>
+      </thead>
+      <tbody id="invoice-body">
+        <!-- Khởi tạo sẵn 3 dòng mẫu giống hình -->
+      </tbody>
+    </table>
+
+    <!-- Bảng tổng kết tiền -->
+    <table class="summary-table">
+      <tr>
+        <td class="label" style="width: 170px;">Tổng số lượng:</td>
+        <td style="width: 60px; text-align: center; font-weight: 700;" id="total-qty">3</td>
+        <td class="label">Tổng tiền hàng:</td>
+        <td class="val" id="subtotal-val">0 đ</td>
+      </tr>
+      <tr>
+        <td colspan="2" border="0"></td>
+        <td class="label">Chiết khấu ( <input type="number" id="discount-percent" value="0" style="width: 40px; text-align: center;" oninput="calculateTotals()"> %):</td>
+        <td class="val" style="color: var(--primary-red);" id="discount-val">- 0 đ</td>
+      </tr>
+      <tr>
+        <td colspan="2"></td>
+        <td class="label" style="color: var(--primary-red);">TỔNG TIỀN THANH TOÁN:</td>
+        <td class="val" style="color: var(--primary-red);" id="grand-total-val">0 đ</td>
+      </tr>
+    </table>
+
+    <!-- Chữ ký -->
+    <div class="signature-section">
+      <div class="sig-box">
+        <div class="sig-title">Người Mua Hàng</div>
+        <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
+      </div>
+      <div class="sig-box">
+        <div class="sig-title">Đại Diện An An Gift</div>
+        <div class="sig-sub">(Ký, ghi rõ họ tên)</div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Cảm ơn Quý khách đã tin tưởng và lựa chọn sản phẩm tại An An Gift!
+    </div>
+  </div>
+</div>
+
+<!-- Modal Quản Lý Mã Hàng Đám Mây -->
+<div class="modal-overlay" id="stockModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>📦 Quản Lý & Thêm Mã Hàng Đám Mây</div>
+      <div style="cursor: pointer;" onclick="closeModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <!-- Form nhập -->
+      <div>
+        <div style="font-weight: 700; font-size: 13px; margin-bottom: 10px;">Thêm / Chỉnh Sửa Mã</div>
+        <div class="form-group">
+          <label>Mã Hàng:</label>
+          <input type="text" id="new-code" placeholder="Ví dụ: AA70, AA54...">
+        </div>
+        <div class="form-group">
+          <label>Đơn Giá (đ):</label>
+          <input type="number" id="new-price" placeholder="Ví dụ: 150000">
+        </div>
+        <div class="form-group">
+          <label>Hình Ảnh Sản Phẩm (Tùy chọn):</label>
+          <input type="file" id="new-img" accept="image/*">
+        </div>
+        <button class="btn btn-darkred" style="margin-top: 15px;" onclick="saveStockItem()">💾 Lưu Đám Mây</button>
+        <button class="btn btn-gray" style="width: 100%; margin-top: 8px;" onclick="resetStockForm()">Làm mới</button>
+      </div>
+
+      <!-- Danh sách mã hàng hiện có -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-weight: 700; font-size: 13px;">📦 Tổng số: <span id="modal-total-count">13</span> mã hàng</span>
+          <input type="text" placeholder="🔍 Tìm kiếm mã..." style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">
+        </div>
+        
+        <div class="item-grid" id="stock-grid">
+          <!-- Các mã hàng đám mây sẽ render ở đây -->
+        </div>
+      </div>
+    </div>
+    <div style="padding: 10px 20px; border-top: 1px solid #eee; text-align: right;">
+      <button class="btn btn-gray" style="display: inline-block; padding: 6px 15px;" onclick="closeModal()">Đóng cửa sổ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Dữ liệu mẫu ban đầu (được cập nhật toàn bộ tiền tố PT -> AA)
+  let stockData = [
+    { code: '3214', price: 1231231, img: 'https://via.placeholder.com/100?text=3214' },
+    { code: '31232', price: 5421412, img: 'https://via.placeholder.com/100?text=31232' },
+    { code: '31312', price: 341241, img: 'https://via.placeholder.com/100?text=31312' },
+    { code: '312312', price: 14213124, img: 'https://via.placeholder.com/100?text=312312' },
+    { code: '2131231', price: 4512421, img: 'https://via.placeholder.com/100?text=2131231' },
+    { code: 'adsa', price: 2132112, img: 'https://via.placeholder.com/100?text=adsa' },
+    { code: 'aa1111', price: 1111111, img: 'https://via.placeholder.com/100?text=aa1111' },
+    { code: 'aa13', price: 450000, img: 'https://via.placeholder.com/100?text=aa13' },
+    { code: 'aa45', price: 150000, img: 'https://via.placeholder.com/100?text=aa45' },
+    { code: 'aa62', price: 11111111, img: 'https://via.placeholder.com/100?text=aa62' },
+    { code: 'aa64', price: 45050, img: 'https://via.placeholder.com/100?text=aa64' },
+    { code: 'qqqq', price: 1121211, img: 'https://via.placeholder.com/100?text=qqqq' },
+    { code: 'sdsad', price: 312421412, img: 'https://via.placeholder.com/100?text=sdsad' }
+  ];
+
+  // Khởi tạo ngày hôm nay
+  document.getElementById('current-date').value = new Date().toLocaleDateString('vi-VN');
+
+  // Thêm dòng mới vào bảng hóa đơn
+  function addRow(code = '', qty = 1, price = 0) {
+    const tbody = document.getElementById('invoice-body');
+    const rowCount = tbody.children.length + 1;
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="stt">${rowCount}</td>
+      <td><input type="text" class="row-code" value="${code}" placeholder="Mã hàng..." oninput="autoFillProduct(this)"></td>
+      <td><input type="number" class="row-qty" value="${qty}" min="1" oninput="calculateTotals()"></td>
+      <td><input type="number" class="row-price" value="${price}" oninput="calculateTotals()"></td>
+      <td class="row-total">0 đ</td>
+      <td>
+        <div class="img-upload-box" onclick="this.querySelector('input').click()">
+          <span>An An Gift</span>
+          <span style="font-size: 8px;">📷 Chọn ảnh</span>
+          <input type="file" accept="image/*" style="display:none" onchange="previewImg(this)">
+        </div>
+      </td>
+      <td><input type="text" placeholder="Ghi chú..."></td>
+      <td><button class="btn-remove-row" onclick="removeRow(this)">X</button></td>
+    `;
+    tbody.appendChild(tr);
+    updateSTT();
+    calculateTotals();
+  }
+
+  // Cập nhật số thứ tự (STT)
+  function updateSTT() {
+    const rows = document.querySelectorAll('#invoice-body tr');
+    rows.forEach((row, index) => {
+      row.querySelector('.stt').innerText = index + 1;
+    });
+  }
+
+  // Xóa dòng
+  function removeRow(btn) {
+    const row = btn.closest('tr');
+    row.remove();
+    updateSTT();
+    calculateTotals();
+  }
+
+  // Xem trước hình ảnh sản phẩm khi tải lên
+  function previewImg(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const box = input.parentElement;
+        box.style.backgroundImage = `url('${e.target.result}')`;
+        box.querySelector('span').style.display = 'none';
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // Tự động tìm và điền giá khi gõ Mã Hàng
+  function autoFillProduct(input) {
+    const val = input.value.trim().toLowerCase();
+    const row = input.closest('tr');
+    const match = stockData.find(item => item.code.toLowerCase() === val);
+    if (match) {
+      row.querySelector('.row-price').value = match.price;
+    }
+    calculateTotals();
+  }
+
+  // Định dạng số thành tiền VND
+  function formatMoney(amount) {
+    return amount.toLocaleString('vi-VN') + ' đ';
+  }
+
+  // Tính toán tổng tiền
+  function calculateTotals() {
+    const rows = document.querySelectorAll('#invoice-body tr');
+    let totalQty = 0;
+    let subtotal = 0;
+
+    rows.forEach(row => {
+      const qty = parseFloat(row.querySelector('.row-qty').value) || 0;
+      const price = parseFloat(row.querySelector('.row-price').value) || 0;
+      const total = qty * price;
+
+      row.querySelector('.row-total').innerText = formatMoney(total);
+      totalQty += qty;
+      subtotal += total;
+    });
+
+    const discountPercent = parseFloat(document.getElementById('discount-percent').value) || 0;
+    const discountVal = subtotal * (discountPercent / 100);
+    const grandTotal = subtotal - discountVal;
+
+    document.getElementById('total-qty').innerText = totalQty;
+    document.getElementById('subtotal-val').innerText = formatMoney(subtotal);
+    document.getElementById('discount-val').innerText = '- ' + formatMoney(discountVal);
+    document.getElementById('grand-total-val').innerText = formatMoney(grandTotal);
+  }
+
+  // Quản lý Modal Kho Đám Mây
+  function openModal() {
+    renderStockGrid();
+    document.getElementById('stockModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('stockModal').style.display = 'none';
+  }
+
+  function renderStockGrid() {
+    const grid = document.getElementById('stock-grid');
+    grid.innerHTML = '';
+    stockData.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'stock-card';
+      card.innerHTML = `
+        <img src="${item.img}" alt="${item.code}">
+        <div class="stock-title">${item.code}</div>
+        <div class="stock-price">${item.price.toLocaleString('vi-VN')} đ</div>
+        <div class="card-actions">
+          <button class="btn-sm btn-edit" onclick="editStock(${index})">Sửa</button>
+          <button class="btn-sm btn-delete" onclick="deleteStock(${index})">Xóa</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    document.getElementById('modal-total-count').innerText = stockData.length;
+    document.getElementById('cloud-count').innerText = stockData.length;
+  }
+
+  function saveStockItem() {
+    const code = document.getElementById('new-code').value.trim();
+    const price = parseFloat(document.getElementById('new-price').value) || 0;
+    
+    if (!code) {
+      alert('Vui lòng nhập mã hàng!');
+      return;
+    }
+
+    stockData.push({
+      code: code,
+      price: price,
+      img: 'https://via.placeholder.com/100?text=' + code
+    });
+
+    renderStockGrid();
+    resetStockForm();
+  }
+
+  function resetStockForm() {
+    document.getElementById('new-code').value = '';
+    document.getElementById('new-price').value = '';
+    document.getElementById('new-img').value = '';
+  }
+
+  function deleteStock(index) {
+    if (confirm('Bạn có chắc muốn xóa mã hàng này khỏi đám mây?')) {
+      stockData.splice(index, 1);
+      renderStockGrid();
+    }
+  }
+
+  function saveDraft() {
+    alert('Đã lưu bản nháp thành công vào hệ thống An An Gift!');
+  }
+
+  // Khởi tạo 3 dòng mặc định như hình ảnh 1
+  addRow('', 1, 0);
+  addRow('', 1, 0);
+  addRow('', 1, 0);
+</script>
+
+</body>
+</html>
