@@ -4,19 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hóa Đơn Bán Hàng - An An Gift</title>
-  <!-- Nhúng phông chữ Montserrat giống hệt mẫu -->
+  <!-- Nhúng phông chữ Montserrat -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Thư viện chụp ảnh màn hình html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <style>
     :root {
-      --primary-red: #800000;
-      --primary-red-hover: #600000;
-      --blue-btn: #4D4DFF;
-      --cyan-btn: #0099B8;
-      --dark-btn: #4B5563;
-      --gold-btn: #D97706;
-      --green-status: #16A34A;
-      --bg-light: #F3F4F6;
-      --border-color: #D1D5DB;
+      --primary-red: #7C0A02;        /* Đỏ rượu vang sang trọng */
+      --gold-accent: #B8860B;        /* Vàng kim Hoàng gia */
+      --dark-header: #1E293B;       /* Xám đen thanh lịch */
+      --bg-card: #F8FAFC;           /* Nền xám nhạt cao cấp */
+      --border-color: #E2E8F0;      /* Đường viền tinh tế */
+      
+      /* Nút bấm */
+      --btn-purple: #4F46E5;
+      --btn-cyan: #0284C7;
+      --btn-gray: #475569;
+      --btn-gold: #D97706;
+      --btn-red: #991B1B;
+      --green-status: #15803D;
     }
 
     * {
@@ -27,22 +34,22 @@
     }
 
     body {
-      background-color: var(--bg-light);
+      background-color: #EEF2F6;
       padding: 20px 10px;
-      color: #333;
+      color: #1E293B;
     }
 
     .container {
-      max-width: 850px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
     /* Action Toolbar Top */
     .toolbar-card {
       background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
       margin-bottom: 12px;
     }
 
@@ -56,27 +63,28 @@
     .btn {
       border: none;
       color: white;
-      padding: 10px 15px;
+      padding: 11px 15px;
       font-weight: 700;
-      font-size: 14px;
-      border-radius: 6px;
+      font-size: 13px;
+      border-radius: 8px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
 
     .btn:hover {
       opacity: 0.9;
+      transform: translateY(-1px);
     }
 
-    .btn-purple { background-color: var(--blue-btn); }
-    .btn-cyan { background-color: var(--cyan-btn); }
-    .btn-gray { background-color: var(--dark-btn); }
-    .btn-gold { background-color: var(--gold-btn); }
-    .btn-darkred { background-color: var(--primary-red); width: 100%; font-size: 15px; padding: 12px; }
+    .btn-purple { background-color: var(--btn-purple); }
+    .btn-cyan { background-color: var(--btn-cyan); }
+    .btn-gray { background-color: var(--btn-gray); }
+    .btn-gold { background-color: var(--btn-gold); }
+    .btn-darkred { background-color: var(--btn-red); width: 100%; font-size: 14px; padding: 12px; }
 
     .status-bar {
       text-align: right;
@@ -89,13 +97,14 @@
     /* Invoice Paper Container */
     .invoice-paper {
       background: white;
-      padding: 40px;
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 45px 40px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       margin: 0 auto;
+      border-top: 6px solid var(--primary-red);
     }
 
-    /* Header Invoice */
+    /* Header Invoice - Phối màu sang trọng */
     .invoice-header {
       text-align: center;
       margin-bottom: 25px;
@@ -103,38 +112,46 @@
 
     .brand-title {
       color: var(--primary-red);
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
     }
 
     .brand-sub {
-      color: var(--gold-btn);
+      color: var(--gold-accent);
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       margin-top: 4px;
     }
 
     .doc-title {
-      color: var(--primary-red);
-      font-size: 22px;
+      background: linear-gradient(135deg, var(--primary-red), #991B1B);
+      color: white;
+      display: inline-block;
+      padding: 6px 24px;
+      border-radius: 20px;
+      font-size: 18px;
       font-weight: 700;
-      margin-top: 15px;
+      margin-top: 18px;
+      letter-spacing: 1px;
     }
 
-    .divider {
-      height: 1px;
-      background-color: var(--primary-red);
-      margin: 15px 0 20px 0;
+    /* Info Section - Tinh tế, rõ ràng */
+    .info-container {
+      background-color: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 25px;
     }
 
-    /* Info Section */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px 20px;
-      margin-bottom: 20px;
+      gap: 12px 24px;
       font-size: 13px;
     }
 
@@ -145,17 +162,26 @@
 
     .info-label {
       font-weight: 700;
-      width: 90px;
+      color: var(--dark-header);
+      width: 95px;
       flex-shrink: 0;
     }
 
     .info-input {
       border: none;
-      border-bottom: 1px dotted #888;
+      border-bottom: 1.5px dashed #CBD5E1;
+      background: transparent;
       width: 100%;
-      padding: 2px 5px;
+      padding: 3px 6px;
       outline: none;
       font-size: 13px;
+      font-weight: 500;
+      color: #0F172A;
+      transition: border-color 0.2s;
+    }
+
+    .info-input:focus {
+      border-bottom-color: var(--primary-red);
     }
 
     /* Table Invoice */
@@ -168,11 +194,12 @@
     .invoice-table th {
       background-color: var(--primary-red);
       color: white;
-      padding: 8px;
+      padding: 10px 6px;
       font-size: 12px;
       font-weight: 700;
       border: 1px solid var(--primary-red);
       text-align: center;
+      text-transform: uppercase;
     }
 
     .invoice-table td {
@@ -183,32 +210,42 @@
       vertical-align: middle;
     }
 
+    .invoice-table select,
     .invoice-table input[type="text"],
     .invoice-table input[type="number"] {
       width: 100%;
       padding: 6px;
-      border: 1px solid #ccc;
+      border: 1px solid #CBD5E1;
       border-radius: 4px;
       text-align: center;
       font-size: 13px;
+      outline: none;
+      background-color: #fff;
     }
 
-    .img-upload-box {
-      width: 80px;
-      height: 80px;
-      border: 1px dashed #ccc;
+    .invoice-table select {
+      font-weight: 600;
+      color: var(--primary-red);
+      cursor: pointer;
+    }
+
+    .img-preview-box {
+      width: 75px;
+      height: 75px;
+      border: 1px dashed #CBD5E1;
+      border-radius: 6px;
       margin: 0 auto;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      color: #999;
-      cursor: pointer;
-      position: relative;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
+      overflow: hidden;
+      background-color: #F8FAFC;
+    }
+
+    .img-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .btn-remove-row {
@@ -221,35 +258,52 @@
       cursor: pointer;
     }
 
-    /* Summary Table */
-    .summary-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: -1px;
-    }
-
-    .summary-table td {
+    /* Bảng Tổng Kết Cuối Hóa Đơn - Màu sắc thông minh & hài hòa */
+    .summary-card {
+      margin-top: 15px;
       border: 1px solid var(--border-color);
-      padding: 6px 12px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
       font-size: 13px;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .summary-table .label {
-      font-weight: 700;
-      text-align: right;
+    .summary-row:last-child {
+      border-bottom: none;
     }
 
-    .summary-table .val {
+    /* Phối màu phân biệt rõ ràng từng phần */
+    .bg-qty { background-color: #F1F5F9; color: #334155; }
+    .bg-subtotal { background-color: #F8FAFC; color: #1E293B; }
+    .bg-discount { background-color: #FEF3C7; color: #92400E; } /* Vàng cam nhẹ dễ chú ý */
+    .bg-grandtotal { background-color: #FEF2F2; color: var(--primary-red); } /* Đỏ hồng sang trọng */
+
+    .summary-label {
       font-weight: 700;
-      text-align: center;
-      width: 180px;
+    }
+
+    .summary-value {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .grand-total-val {
+      font-size: 18px;
+      color: var(--primary-red);
     }
 
     /* Signature Section */
     .signature-section {
       display: flex;
       justify-content: space-between;
-      margin-top: 50px;
+      margin-top: 45px;
       text-align: center;
     }
 
@@ -260,23 +314,24 @@
     .sig-title {
       font-weight: 700;
       font-size: 13px;
+      color: var(--dark-header);
     }
 
     .sig-sub {
       font-style: italic;
       font-size: 11px;
-      color: #666;
-      margin-top: 2px;
+      color: #64748B;
+      margin-top: 3px;
     }
 
     .footer-note {
       text-align: center;
       font-style: italic;
-      font-size: 11px;
-      color: #777;
-      margin-top: 60px;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 55px;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 12px;
     }
 
     /* Modal Stock Management */
@@ -295,7 +350,7 @@
       width: 900px;
       max-width: 95vw;
       max-height: 90vh;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -357,7 +412,7 @@
 
     .stock-card img {
       width: 100%;
-      height: 100px;
+      height: 90px;
       object-fit: cover;
       border-radius: 4px;
       margin-bottom: 6px;
@@ -397,14 +452,14 @@
     @media print {
       body { background: white; padding: 0; }
       .toolbar-card, .status-bar, .btn-remove-row, .modal-overlay { display: none !important; }
-      .invoice-paper { box-shadow: none; padding: 0; }
+      .invoice-paper { box-shadow: none; padding: 0; border: none; }
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Thanh công cụ điều khiển -->
+  <!-- Thanh công cụ -->
   <div class="toolbar-card">
     <div class="btn-grid">
       <button class="btn btn-purple" onclick="openModal()">📦 Kho Mã Hàng</button>
@@ -412,7 +467,8 @@
       <button class="btn btn-gray" onclick="alert('Đã mở danh sách đơn nháp!')">📁 Đơn Nháp ( 4 )</button>
       <button class="btn btn-cyan" onclick="window.print()">🖨️ In Hóa Đơn</button>
       <button class="btn btn-cyan" onclick="window.print()">📄 Xuất PDF</button>
-      <button class="btn btn-gold" onclick="alert('Đã chụp ảnh hóa đơn!')">📷 Chụp Ảnh</button>
+      <!-- Tính năng 1: Chụp ảnh tự động tải xuống -->
+      <button class="btn btn-gold" onclick="captureInvoice()">📷 Chụp Ảnh</button>
     </div>
     <button class="btn btn-darkred" onclick="addRow()">↵ Xuống Dòng (Thêm Dòng)</button>
   </div>
@@ -421,36 +477,37 @@
     ✅ Đã đồng bộ đám mây (<span id="cloud-count">13</span> mã hàng sẵn sàng)
   </div>
 
-  <!-- Tờ Hóa Đơn In -->
+  <!-- Tờ Hóa Đơn -->
   <div class="invoice-paper" id="invoice">
+    <!-- Tính năng 4: Phần Đầu hóa đơn sang trọng -->
     <div class="invoice-header">
       <div class="brand-title">AN AN GIFT</div>
       <div class="brand-sub">QUÀ TẶNG DOANH NGHIỆP & GIỎ QUÀ TẾT</div>
-      <div class="doc-title">HÓA ĐƠN BÁN HÀNG</div>
+      <div><span class="doc-title">HÓA ĐƠN BÁN HÀNG</span></div>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="info-grid">
-      <div class="info-row">
-        <span class="info-label">Khách hàng:</span>
-        <input type="text" class="info-input" placeholder="Nhập tên khách hàng / đơn vị...">
-      </div>
-      <div class="info-row">
-        <span class="info-label">Ngày lập:</span>
-        <input type="text" class="info-input" id="current-date">
-      </div>
-      <div class="info-row">
-        <span class="info-label">Điện thoại:</span>
-        <input type="text" class="info-input" placeholder="Nhập số điện thoại...">
-      </div>
-      <div class="info-row">
-        <span class="info-label">Mã hóa đơn:</span>
-        <input type="text" class="info-input" id="invoice-id" value="AA602951">
-      </div>
-      <div class="info-row" style="grid-column: span 2;">
-        <span class="info-label">Địa chỉ:</span>
-        <input type="text" class="info-input" placeholder="Nhập địa chỉ giao hàng...">
+    <div class="info-container">
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Khách hàng:</span>
+          <input type="text" class="info-input" placeholder="Nhập tên khách hàng / đơn vị...">
+        </div>
+        <div class="info-row">
+          <span class="info-label">Ngày lập:</span>
+          <input type="text" class="info-input" id="current-date">
+        </div>
+        <div class="info-row">
+          <span class="info-label">Điện thoại:</span>
+          <input type="text" class="info-input" placeholder="Nhập số điện thoại...">
+        </div>
+        <div class="info-row">
+          <span class="info-label">Mã hóa đơn:</span>
+          <input type="text" class="info-input" id="invoice-id" value="AA602951">
+        </div>
+        <div class="info-row" style="grid-column: span 2;">
+          <span class="info-label">Địa chỉ:</span>
+          <input type="text" class="info-input" placeholder="Nhập địa chỉ giao hàng...">
+        </div>
       </div>
     </div>
 
@@ -458,40 +515,43 @@
     <table class="invoice-table">
       <thead>
         <tr>
-          <th style="width: 50px;">STT</th>
-          <th style="width: 120px;">Mã Hàng</th>
-          <th style="width: 60px;">SL</th>
+          <th style="width: 45px;">STT</th>
+          <!-- Tính năng 2: Thanh chọn mã hàng trong kho -->
+          <th style="width: 140px;">Mã Hàng</th>
+          <th style="width: 55px;">SL</th>
           <th style="width: 110px;">Đơn Giá</th>
-          <th style="width: 110px;">Thành Tiền</th>
-          <th style="width: 110px;">Hình Ảnh</th>
+          <th style="width: 120px;">Thành Tiền</th>
+          <th style="width: 90px;">Hình Ảnh</th>
           <th>Ghi Chú</th>
           <th style="width: 30px;"></th>
         </tr>
       </thead>
       <tbody id="invoice-body">
-        <!-- Khởi tạo sẵn 3 dòng mẫu giống hình -->
+        <!-- Các dòng hóa đơn sẽ được tạo tự động bằng JS -->
       </tbody>
     </table>
 
-    <!-- Bảng tổng kết tiền -->
-    <table class="summary-table">
-      <tr>
-        <td class="label" style="width: 170px;">Tổng số lượng:</td>
-        <td style="width: 60px; text-align: center; font-weight: 700;" id="total-qty">3</td>
-        <td class="label">Tổng tiền hàng:</td>
-        <td class="val" id="subtotal-val">0 đ</td>
-      </tr>
-      <tr>
-        <td colspan="2" border="0"></td>
-        <td class="label">Chiết khấu ( <input type="number" id="discount-percent" value="0" style="width: 40px; text-align: center;" oninput="calculateTotals()"> %):</td>
-        <td class="val" style="color: var(--primary-red);" id="discount-val">- 0 đ</td>
-      </tr>
-      <tr>
-        <td colspan="2"></td>
-        <td class="label" style="color: var(--primary-red);">TỔNG TIỀN THANH TOÁN:</td>
-        <td class="val" style="color: var(--primary-red);" id="grand-total-val">0 đ</td>
-      </tr>
-    </table>
+    <!-- Tính năng 3: Cuối hóa đơn phối màu thông minh, hài hòa -->
+    <div class="summary-card">
+      <div class="summary-row bg-qty">
+        <span class="summary-label">TỔNG SỐ LƯỢNG SẢN PHẨM:</span>
+        <span class="summary-value" id="total-qty">0</span>
+      </div>
+      <div class="summary-row bg-subtotal">
+        <span class="summary-label">TỔNG TIỀN HÀNG:</span>
+        <span class="summary-value" id="subtotal-val">0 đ</span>
+      </div>
+      <div class="summary-row bg-discount">
+        <span class="summary-label">
+          CHIẾT KHẤU ( <input type="number" id="discount-percent" value="0" min="0" max="100" style="width: 45px; text-align: center; border: 1px solid #CBD5E1; border-radius: 4px; font-weight: bold;" oninput="calculateTotals()"> % ):
+        </span>
+        <span class="summary-value" id="discount-val">- 0 đ</span>
+      </div>
+      <div class="summary-row bg-grandtotal">
+        <span class="summary-label" style="color: var(--primary-red); font-size: 14px;">TỔNG TIỀN THANH TOÁN:</span>
+        <span class="summary-value grand-total-val" id="grand-total-val">0 đ</span>
+      </div>
+    </div>
 
     <!-- Chữ ký -->
     <div class="signature-section">
@@ -511,7 +571,7 @@
   </div>
 </div>
 
-<!-- Modal Quản Lý Mã Hàng Đám Mây -->
+<!-- Modal Quản Lý Mã Hàng -->
 <div class="modal-overlay" id="stockModal">
   <div class="modal-card">
     <div class="modal-header">
@@ -519,7 +579,6 @@
       <div style="cursor: pointer;" onclick="closeModal()">✕</div>
     </div>
     <div class="modal-body">
-      <!-- Form nhập -->
       <div>
         <div style="font-weight: 700; font-size: 13px; margin-bottom: 10px;">Thêm / Chỉnh Sửa Mã</div>
         <div class="form-group">
@@ -531,22 +590,20 @@
           <input type="number" id="new-price" placeholder="Ví dụ: 150000">
         </div>
         <div class="form-group">
-          <label>Hình Ảnh Sản Phẩm (Tùy chọn):</label>
-          <input type="file" id="new-img" accept="image/*">
+          <label>URL Hình Ảnh (Tùy chọn):</label>
+          <input type="text" id="new-img" placeholder="Dán link ảnh tại đây...">
         </div>
         <button class="btn btn-darkred" style="margin-top: 15px;" onclick="saveStockItem()">💾 Lưu Đám Mây</button>
         <button class="btn btn-gray" style="width: 100%; margin-top: 8px;" onclick="resetStockForm()">Làm mới</button>
       </div>
 
-      <!-- Danh sách mã hàng hiện có -->
       <div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <span style="font-weight: 700; font-size: 13px;">📦 Tổng số: <span id="modal-total-count">13</span> mã hàng</span>
-          <input type="text" placeholder="🔍 Tìm kiếm mã..." style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">
         </div>
         
         <div class="item-grid" id="stock-grid">
-          <!-- Các mã hàng đám mây sẽ render ở đây -->
+          <!-- Render danh sách mã hàng -->
         </div>
       </div>
     </div>
@@ -557,54 +614,99 @@
 </div>
 
 <script>
-  // Dữ liệu mẫu ban đầu (được cập nhật toàn bộ tiền tố PT -> AA)
+  // Kho dữ liệu mã hàng sẵn có
   let stockData = [
-    { code: '3214', price: 1231231, img: 'https://via.placeholder.com/100?text=3214' },
-    { code: '31232', price: 5421412, img: 'https://via.placeholder.com/100?text=31232' },
-    { code: '31312', price: 341241, img: 'https://via.placeholder.com/100?text=31312' },
-    { code: '312312', price: 14213124, img: 'https://via.placeholder.com/100?text=312312' },
-    { code: '2131231', price: 4512421, img: 'https://via.placeholder.com/100?text=2131231' },
-    { code: 'adsa', price: 2132112, img: 'https://via.placeholder.com/100?text=adsa' },
-    { code: 'aa1111', price: 1111111, img: 'https://via.placeholder.com/100?text=aa1111' },
-    { code: 'aa13', price: 450000, img: 'https://via.placeholder.com/100?text=aa13' },
-    { code: 'aa45', price: 150000, img: 'https://via.placeholder.com/100?text=aa45' },
-    { code: 'aa62', price: 11111111, img: 'https://via.placeholder.com/100?text=aa62' },
-    { code: 'aa64', price: 45050, img: 'https://via.placeholder.com/100?text=aa64' },
-    { code: 'qqqq', price: 1121211, img: 'https://via.placeholder.com/100?text=qqqq' },
-    { code: 'sdsad', price: 312421412, img: 'https://via.placeholder.com/100?text=sdsad' }
+    { code: '3214', price: 1231231, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150' },
+    { code: '31232', price: 5421412, img: 'https://images.unsplash.com/photo-1513885535751-8b9238bd48d7?w=150' },
+    { code: '31312', price: 341241, img: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=150' },
+    { code: '312312', price: 14213124, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150' },
+    { code: '2131231', price: 4512421, img: 'https://images.unsplash.com/photo-1513885535751-8b9238bd48d7?w=150' },
+    { code: 'adsa', price: 2132112, img: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=150' },
+    { code: 'aa1111', price: 1111111, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150' },
+    { code: 'aa13', price: 450000, img: 'https://images.unsplash.com/photo-1513885535751-8b9238bd48d7?w=150' },
+    { code: 'aa45', price: 150000, img: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=150' },
+    { code: 'aa62', price: 11111111, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150' },
+    { code: 'aa64', price: 45050, img: 'https://images.unsplash.com/photo-1513885535751-8b9238bd48d7?w=150' },
+    { code: 'qqqq', price: 1121211, img: 'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=150' },
+    { code: 'sdsad', price: 312421412, img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150' }
   ];
 
-  // Khởi tạo ngày hôm nay
+  // Khởi tạo ngày hiện tại
   document.getElementById('current-date').value = new Date().toLocaleDateString('vi-VN');
 
-  // Thêm dòng mới vào bảng hóa đơn
-  function addRow(code = '', qty = 1, price = 0) {
+  // Hàm tạo danh sách option cho Dropdown Select
+  function getStockOptionsHtml(selectedCode = '') {
+    let options = `<option value="">-- Chọn mã --</option>`;
+    stockData.forEach(item => {
+      const isSelected = item.code === selectedCode ? 'selected' : '';
+      options += `<option value="${item.code}" ${isSelected}>${item.code}</option>`;
+    });
+    return options;
+  }
+
+  // Thêm dòng mới
+  function addRow(selectedCode = '', qty = 1) {
     const tbody = document.getElementById('invoice-body');
-    const rowCount = tbody.children.length + 1;
-    
     const tr = document.createElement('tr');
+    
     tr.innerHTML = `
-      <td class="stt">${rowCount}</td>
-      <td><input type="text" class="row-code" value="${code}" placeholder="Mã hàng..." oninput="autoFillProduct(this)"></td>
-      <td><input type="number" class="row-qty" value="${qty}" min="1" oninput="calculateTotals()"></td>
-      <td><input type="number" class="row-price" value="${price}" oninput="calculateTotals()"></td>
-      <td class="row-total">0 đ</td>
+      <td class="stt">1</td>
       <td>
-        <div class="img-upload-box" onclick="this.querySelector('input').click()">
-          <span>An An Gift</span>
-          <span style="font-size: 8px;">📷 Chọn ảnh</span>
-          <input type="file" accept="image/*" style="display:none" onchange="previewImg(this)">
+        <select class="row-code" onchange="onSelectProduct(this)">
+          ${getStockOptionsHtml(selectedCode)}
+        </select>
+      </td>
+      <td><input type="number" class="row-qty" value="${qty}" min="1" oninput="calculateTotals()"></td>
+      <td><input type="number" class="row-price" value="0" oninput="calculateTotals()"></td>
+      <td class="row-total" style="font-weight: 700; color: var(--primary-red);">0 đ</td>
+      <td>
+        <div class="img-preview-box">
+          <span style="font-size: 10px; color: #94A3B8;">Chưa chọn</span>
         </div>
       </td>
       <td><input type="text" placeholder="Ghi chú..."></td>
-      <td><button class="btn-remove-row" onclick="removeRow(this)">X</button></td>
+      <td><button class="btn-remove-row" onclick="removeRow(this)">✕</button></td>
     `;
+
     tbody.appendChild(tr);
     updateSTT();
+    
+    if (selectedCode) {
+      const selectEl = tr.querySelector('.row-code');
+      onSelectProduct(selectEl);
+    }
+  }
+
+  // Cập nhật tất cả Dropdown Mã Hàng khi có thay đổi từ Kho
+  function updateAllSelectDropdowns() {
+    const selects = document.querySelectorAll('.row-code');
+    selects.forEach(select => {
+      const currentVal = select.value;
+      select.innerHTML = getStockOptionsHtml(currentVal);
+    });
+  }
+
+  // Xử lý khi người dùng chọn Mã Hàng trong danh sách
+  function onSelectProduct(selectEl) {
+    const code = selectEl.value;
+    const row = selectEl.closest('tr');
+    const priceInput = row.querySelector('.row-price');
+    const imgBox = row.querySelector('.img-preview-box');
+
+    const product = stockData.find(item => item.code === code);
+
+    if (product) {
+      priceInput.value = product.price;
+      imgBox.innerHTML = `<img src="${product.img}" alt="${product.code}">`;
+    } else {
+      priceInput.value = 0;
+      imgBox.innerHTML = `<span style="font-size: 10px; color: #94A3B8;">Chưa chọn</span>`;
+    }
+
     calculateTotals();
   }
 
-  // Cập nhật số thứ tự (STT)
+  // Cập nhật Số thứ tự
   function updateSTT() {
     const rows = document.querySelectorAll('#invoice-body tr');
     rows.forEach((row, index) => {
@@ -614,42 +716,17 @@
 
   // Xóa dòng
   function removeRow(btn) {
-    const row = btn.closest('tr');
-    row.remove();
+    btn.closest('tr').remove();
     updateSTT();
     calculateTotals();
   }
 
-  // Xem trước hình ảnh sản phẩm khi tải lên
-  function previewImg(input) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const box = input.parentElement;
-        box.style.backgroundImage = `url('${e.target.result}')`;
-        box.querySelector('span').style.display = 'none';
-      }
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  // Tự động tìm và điền giá khi gõ Mã Hàng
-  function autoFillProduct(input) {
-    const val = input.value.trim().toLowerCase();
-    const row = input.closest('tr');
-    const match = stockData.find(item => item.code.toLowerCase() === val);
-    if (match) {
-      row.querySelector('.row-price').value = match.price;
-    }
-    calculateTotals();
-  }
-
-  // Định dạng số thành tiền VND
+  // Định dạng tiền VND
   function formatMoney(amount) {
     return amount.toLocaleString('vi-VN') + ' đ';
   }
 
-  // Tính toán tổng tiền
+  // Tính toán Tổng tiền
   function calculateTotals() {
     const rows = document.querySelectorAll('#invoice-body tr');
     let totalQty = 0;
@@ -675,6 +752,31 @@
     document.getElementById('grand-total-val').innerText = formatMoney(grandTotal);
   }
 
+  // TÍNH NĂNG 1: Chụp ảnh tự động tải về máy
+  function captureInvoice() {
+    const invoiceElement = document.getElementById('invoice');
+    
+    // Tạm ẩn viền khung khi chụp cho đẹp
+    invoiceElement.style.boxShadow = 'none';
+
+    html2canvas(invoiceElement, {
+      scale: 2, // Tăng chất lượng ảnh nét gấp 2 lần
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    }).then(canvas => {
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement('a');
+      const invoiceId = document.getElementById('invoice-id').value || 'AnAnGift';
+      
+      link.download = `HoaDon_${invoiceId}.png`;
+      link.href = image;
+      link.click();
+
+      // Khôi phục lại đổ bóng cho giao diện
+      invoiceElement.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
+    });
+  }
+
   // Quản lý Modal Kho Đám Mây
   function openModal() {
     renderStockGrid();
@@ -696,8 +798,7 @@
         <div class="stock-title">${item.code}</div>
         <div class="stock-price">${item.price.toLocaleString('vi-VN')} đ</div>
         <div class="card-actions">
-          <button class="btn-sm btn-edit" onclick="editStock(${index})">Sửa</button>
-          <button class="btn-sm btn-delete" onclick="deleteStock(${index})">Xóa</button>
+          <button class="btn-sm btn-delete" style="grid-column: span 2;" onclick="deleteStock(${index})">Xóa mã</button>
         </div>
       `;
       grid.appendChild(card);
@@ -709,18 +810,15 @@
   function saveStockItem() {
     const code = document.getElementById('new-code').value.trim();
     const price = parseFloat(document.getElementById('new-price').value) || 0;
+    const img = document.getElementById('new-img').value.trim() || 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=150';
     
     if (!code) {
       alert('Vui lòng nhập mã hàng!');
       return;
     }
 
-    stockData.push({
-      code: code,
-      price: price,
-      img: 'https://via.placeholder.com/100?text=' + code
-    });
-
+    stockData.push({ code, price, img });
+    updateAllSelectDropdowns();
     renderStockGrid();
     resetStockForm();
   }
@@ -734,6 +832,7 @@
   function deleteStock(index) {
     if (confirm('Bạn có chắc muốn xóa mã hàng này khỏi đám mây?')) {
       stockData.splice(index, 1);
+      updateAllSelectDropdowns();
       renderStockGrid();
     }
   }
@@ -742,10 +841,10 @@
     alert('Đã lưu bản nháp thành công vào hệ thống An An Gift!');
   }
 
-  // Khởi tạo 3 dòng mặc định như hình ảnh 1
-  addRow('', 1, 0);
-  addRow('', 1, 0);
-  addRow('', 1, 0);
+  // Khởi tạo 3 dòng mặc định
+  addRow();
+  addRow();
+  addRow();
 </script>
 
 </body>
